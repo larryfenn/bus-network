@@ -24,7 +24,7 @@ public class Logger {
 	}
 
 	public void registerBoard(double time, int station, int bus, int popChange) {
-	  boardLog.add(new BoardEvent(time, station, bus, popChange));
+		boardLog.add(new BoardEvent(time, station, bus, popChange));
 	}
 
 	public void registerSpawn(double time, int station, int count) {

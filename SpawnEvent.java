@@ -5,9 +5,9 @@
  **/
 
 public class SpawnEvent {
-	public static double time;
-	public static int station;
-	public static int count;
+	public double time;
+	public int station;
+	public int count;
 
 	public SpawnEvent(double time, int station, int count) {
 		this.time = time;

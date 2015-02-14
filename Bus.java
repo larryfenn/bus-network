@@ -38,9 +38,9 @@ public class Bus {
 	public void load(int count, double loadTime, boolean atArrivals) {
 		clock += count * loadTime;
 		if (atArrivals) {
-			toLots = count;
+			toLots += count;
 		} else {
-			toDepartures = count;
+			toDepartures += count;
 		}
 	}
 

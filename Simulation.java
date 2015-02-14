@@ -97,7 +97,6 @@ public class Simulation {
 			curBus.nextStop(travelTimes[0]);
 			// bus now at Arrivals
 			boardPassengers(b, 0);
-
 			// bus going through lots
 			for (int s = 1; s < stops.size(); s++) {
 				Station curStop = stops.get(s);
@@ -150,8 +149,6 @@ public class Simulation {
 		                                              curStop.clock,
 		                                              curBus.clock);
 		log.registerSpawn(curBus.clock, s, newRiders.count);
-		System.out.println(newRiders);
-		// something s up with the requeue!
 		curStop.enqueue(newRiders);
 		curStop.clock = curBus.clock;
 

@@ -30,7 +30,7 @@ public class GhostSystem {
 		travelTimes[3] = 4;
 		travelTimes[4] = 4;
 		travelTimes[5] = 2;
-		Simulation s = new Simulation(30, 8, 3, embarkp, disembarkp, travelTimes, .5);
+		Simulation s = new Simulation(30, 8, 3, embarkp, disembarkp, travelTimes, .1);
 		System.out.println(s.log.toString());
 		s.run();
 		System.out.println(s.log.toString());

@@ -7,10 +7,10 @@
  **/
 
 public class BoardEvent {
-	public static double time;
-	public static int station;
-	public static int bus;
-	public static int popChange;
+	public double time;
+	public int station;
+	public int bus;
+	public int popChange;
 
 	public BoardEvent(double time, int station, int bus, int popChange) {
 		this.time = time;
