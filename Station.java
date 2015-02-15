@@ -26,7 +26,7 @@ public class Station {
 	public PassengerGroup dequeue() {
 		return queue.pollFirst();
 	}
-
+	
 	public void requeue(PassengerGroup pg) {
 		if (pg.count != 0)
 			queue.addFirst(pg);

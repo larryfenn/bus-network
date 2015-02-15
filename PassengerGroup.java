@@ -18,10 +18,15 @@ public class PassengerGroup {
 		count -= amount;
 	}
 
+	// returns how many people had to wait longer than waitTime
 	public int waitPoll(double time, double waitTime) {
-		return (int)Math.floor(count * (time - waitTime - startTime)
+		if ((time - startTime) <= waitTime) {
+			return 0;
+		} else {
+			return (int)Math.floor(count * (time - waitTime - startTime)
 		                  / (endTime - startTime));
-	}
+		}
+}
 
 	public String toString() {
 		return "[" + count + "]"  + ":" + "(" + startTime + ", " + endTime + ")";

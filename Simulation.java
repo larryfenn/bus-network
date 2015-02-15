@@ -46,6 +46,7 @@ public class Simulation {
 	private int busCapacity;
 	private int fleet;
 	private double headway;
+	private double cutoff;
 	private double[] embarkp;
 	private double[] disembarkp;
 	private double[] travelTimes;
@@ -58,12 +59,13 @@ public class Simulation {
 	private int groupCount;
 	private boolean firstBus;
 
-	public Simulation(int busCapacity, int fleet, double headway,
+	public Simulation(int busCapacity, int fleet, double headway, double cutoff,
 	                  double[] embarkp, double[] disembarkp, double[] travelTimes,
 	                  double loadTime) {
 		this.busCapacity = busCapacity;
 		this.fleet = fleet;
 		this.headway = headway;
+		this.cutoff = cutoff;
 		this.embarkp = embarkp;
 		this.disembarkp = disembarkp;
 		this.travelTimes = travelTimes;
@@ -149,7 +151,9 @@ public class Simulation {
 		                                              curStop.clock,
 		                                              curBus.clock);
 		log.registerSpawn(curBus.clock, s, newRiders.count);
-		curStop.enqueue(newRiders);
+		if (newRiders.count != 0) {
+			curStop.enqueue(newRiders);
+		}
 		curStop.clock = curBus.clock;
 
 		PassengerGroup nowBoarding = curStop.dequeue();
@@ -176,6 +180,7 @@ public class Simulation {
 
 		// now the group is perfectly sized to fit into the bus
 		totalBoardTime += nowBoarding.count * loadTime;
+		log.qualityRecord.add(nowBoarding.waitPoll(curBus.clock, cutoff));
 		log.registerBoard(curBus.clock, s, b, nowBoarding.count);
 		curBus.load(nowBoarding.count, loadTime, s == 0);
 		// put IPA code here
@@ -225,7 +230,7 @@ public class Simulation {
 			p *= Math.random();
 			k++;
 		}
-		return k - 1;
+		return (k == 0) ? 0 : k - 1;
 	}
 
 	private int getBinomial(int n, double p) {
