@@ -46,34 +46,35 @@ public class Simulation {
 	private int busCapacity;
 	private int fleet;
 	private double headway;
-	private double cutoff;
+	public double cutoff;
 	private double[] embarkp;
 	private double[] disembarkp;
 	private double[] travelTimes;
 	private double loadTime;
 	public Logger log;
+	public double quality;
 
 	private double checkpointTime;
 
-	private double ipaWait;
-	private int groupCount;
+	public double ipaWait;
+	public int groupCount;
+
 	private boolean firstBus;
 
-	public Simulation(int busCapacity, int fleet, double headway, double cutoff,
-	                  double[] embarkp, double[] disembarkp, double[] travelTimes,
-	                  double loadTime) {
+	public Simulation(int busCapacity, double cutoff, double[] embarkp,
+	                  double[] disembarkp, double[] travelTimes, double loadTime) {
 		this.busCapacity = busCapacity;
-		this.fleet = fleet;
-		this.headway = headway;
 		this.cutoff = cutoff;
 		this.embarkp = embarkp;
 		this.disembarkp = disembarkp;
 		this.travelTimes = travelTimes;
 		this.loadTime = loadTime;
-		initialize();
+		quality = 1;
 	}
 
-	private void initialize() {
+	public void initialize(int fleet, double headway) {
+		this.fleet = fleet;
+		this.headway = headway;
 		checkpointTime = 0;
 		buses = new ArrayList<Bus>();
 		stops = new ArrayList<Station>();
@@ -92,7 +93,6 @@ public class Simulation {
 	public void run() {
 		for (int b = 0; b < buses.size(); b++) {
 			Bus curBus = buses.get(b);
-
 			// the buses are all "right at" the checkpoint
 			double startCycle = curBus.clock;
 			checkpoint(b);
@@ -120,10 +120,7 @@ public class Simulation {
 	private void checkpoint(int b) {
 		if(!firstBus) {
 			Bus curBus = buses.get(b);
-			if (curBus.clock < checkpointTime + headway)
-				curBus.ipaFlag = true;
-			if (curBus.clock >= checkpointTime + headway)
-				curBus.ipaFlag = false;
+			curBus.ipaFlag = curBus.clock < checkpointTime + headway;
 			curBus.clock = Math.max(curBus.clock, checkpointTime + headway);
 			checkpointTime = curBus.clock;
 		}
@@ -180,18 +177,23 @@ public class Simulation {
 
 		// now the group is perfectly sized to fit into the bus
 		totalBoardTime += nowBoarding.count * loadTime;
+
+		double tardyProp;
+		if (curBus.clock > nowBoarding.endTime + cutoff) {
+			tardyProp = 1;
+		} else if (curBus.clock < nowBoarding.startTime + cutoff) {
+			tardyProp = 0;
+		} else {
+			tardyProp = nowBoarding.endTime - (curBus.clock - cutoff);
+		}
+		tardyProp /= (nowBoarding.endTime - nowBoarding.startTime);
+		double ghost = nowBoarding.count * tardyProp;
+		ipaWait += (curBus.ipaFlag ? 1 : 0) * ghost;
+		groupCount++;
+
 		log.qualityRecord.add(nowBoarding.waitPoll(curBus.clock, cutoff));
 		log.registerBoard(curBus.clock, s, b, nowBoarding.count);
 		curBus.load(nowBoarding.count, loadTime, s == 0);
-		// put IPA code here
-		/**
-		if(boardersAvgWait > 10) {
-			ipaWait += (curBus.ipaFlag ? 1 : 0)*(seatsTaken/(boarders.end - boarders.start));
-			log.qualityRecord.add(seatsTaken);
-		} else {
-			log.qualityRecord.add(0);
-		}
-		**/
 
 		return totalBoardTime + boardPassengers(b, s);
 	}

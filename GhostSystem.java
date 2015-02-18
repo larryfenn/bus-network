@@ -15,10 +15,10 @@ public class GhostSystem {
 
 	public static void main(String[] args) {
 		double[] embarkp = new double[4];
-		embarkp[0] = .75;
-		embarkp[1] = .25;
-		embarkp[2] = .25;
-		embarkp[3] = .25;
+		embarkp[0] = 4;
+		embarkp[1] = 1;
+		embarkp[2] = 1;
+		embarkp[3] = 1;
 		double[] disembarkp = new double[3];
 		disembarkp[0] = .5;
 		disembarkp[1] = .25;
@@ -30,8 +30,15 @@ public class GhostSystem {
 		travelTimes[3] = 4;
 		travelTimes[4] = 4;
 		travelTimes[5] = 2;
-		Simulation s = new Simulation(30, 8, 3, 10, embarkp, disembarkp,
-		                              travelTimes, .2);
-		s.run();
+		int busCapacity = 30;
+		double cutoff = 10;
+		double loadTime = .2;
+		int iterations = 10;
+
+		Simulation s = new Simulation(busCapacity, cutoff, embarkp, disembarkp,
+		                              travelTimes, loadTime);
+
+		Optimizer o = new Optimizer(s);
+		o.ipaOptimize(10, 10);
 	}
 }

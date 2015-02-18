@@ -19,9 +19,12 @@ public class PassengerGroup {
 	}
 
 	// returns how many people had to wait longer than waitTime
+	// uses a linearity assumption; the count function is a ramp .../```
 	public int waitPoll(double time, double waitTime) {
 		if ((time - startTime) <= waitTime) {
 			return 0;
+		} else if ((time - endTime >= waitTime)) {
+			return count;
 		} else {
 			return (int)Math.floor(count * (time - waitTime - startTime)
 		                  / (endTime - startTime));
