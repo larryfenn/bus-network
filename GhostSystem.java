@@ -14,6 +14,7 @@
 public class GhostSystem {
 
 	public static void main(String[] args) {
+		// Simulation parameters: Poisson arrivals, Binomial unloading, traveltimes
 		double[] embarkp = new double[4];
 		embarkp[0] = 4;
 		embarkp[1] = 1;
@@ -30,15 +31,17 @@ public class GhostSystem {
 		travelTimes[3] = 4;
 		travelTimes[4] = 4;
 		travelTimes[5] = 2;
+		// Simulation parameters: bus capacity, "allowed" waiting time, passenger
+		// load time.
 		int busCapacity = 30;
 		double cutoff = 10;
 		double loadTime = .2;
-		int iterations = 10;
-
 		Simulation s = new Simulation(busCapacity, cutoff, embarkp, disembarkp,
 		                              travelTimes, loadTime);
 
 		Optimizer o = new Optimizer(s);
+		// Example running the optimization algorithm with an initial guess
+		// (u, b) = (10, 10)
 		o.ipaOptimize(10, 10);
 	}
 }
