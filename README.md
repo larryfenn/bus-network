@@ -1,4 +1,4 @@
-# 795-Project-Improved
+# bus-network
 Simulation of buses along a single route with stations and passengers.  
 Originally planned as a Python project, currently being written in Java, 
 now in the second iteration of its existence. 
